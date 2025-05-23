@@ -3,11 +3,11 @@ import 'screens/diary_list_screen.dart'; // Import DiaryListScreen
 import 'services/objectbox_service.dart'; // Import ObjectBoxService
 
 // Global instance of ObjectBoxService
-late ObjectBox objectbox;
+late ObjectBoxService objectbox; // Changed from ObjectBox to ObjectBoxService
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  objectbox = await ObjectBox.create();
+  objectbox = await ObjectBoxService.create(); // Changed from ObjectBox to ObjectBoxService
   runApp(const MyApp());
 }
 
