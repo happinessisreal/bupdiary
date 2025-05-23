@@ -58,9 +58,19 @@ class _DiaryListScreenState extends State<DiaryListScreen> {
                         : entry.content,
                     style: TextStyle(color: Colors.grey[600]),
                   ),
-                  trailing: Text(
-                    '${entry.dateTime.day}/${entry.dateTime.month}/${entry.dateTime.year}',
-                    style: TextStyle(color: Colors.grey[500], fontSize: 12),
+                  trailing: Row( // Use a Row to place date and delete button
+                    mainAxisSize: MainAxisSize.min, // So the Row doesn't take all available space
+                    children: [
+                      Text(
+                        '${entry.dateTime.day}/${entry.dateTime.month}/${entry.dateTime.year}',
+                        style: TextStyle(color: Colors.grey[500], fontSize: 12),
+                      ),
+                      IconButton(
+                        icon: Icon(Icons.delete, color: Colors.red[400]),
+                        tooltip: 'Delete Entry',
+                        onPressed: () => _confirmDelete(context, entry),
+                      ),
+                    ],
                   ),
                   onTap: () async {
                     await Navigator.of(context).push(
@@ -83,6 +93,38 @@ class _DiaryListScreenState extends State<DiaryListScreen> {
         tooltip: 'Add Entry',
         child: const Icon(Icons.add),
       ),
+    );
+  }
+
+  void _confirmDelete(BuildContext context, DiaryEntry entry) {
+    showDialog(
+      context: context,
+      builder: (BuildContext ctx) {
+        return AlertDialog(
+          title: const Text('Confirm Delete'),
+          content: Text('Are you sure you want to delete "${entry.title}"? This action cannot be undone.'),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Cancel'),
+              onPressed: () {
+                Navigator.of(ctx).pop();
+              },
+            ),
+            TextButton(
+              style: TextButton.styleFrom(foregroundColor: Colors.red),
+              child: const Text('Delete'),
+              onPressed: () {
+                objectbox.deleteDiaryEntry(entry.id);
+                _refreshDiaryEntries();
+                Navigator.of(ctx).pop();
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('"${entry.title}" deleted.')),
+                );
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 }
