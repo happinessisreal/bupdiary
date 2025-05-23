@@ -1,6 +1,6 @@
 import 'package:path/path.dart' as p;
-import 'package:path_provider/path_provider.dart';
-import 'objectbox.g.dart'; // Generated file
+import 'package:path_provider/path_provider.dart' as p_provider;
+import '../objectbox.g.dart'; // Corrected import path
 import '../models/diary_entry.dart';
 
 class ObjectBox {
