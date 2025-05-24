@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'screens/diary_list_screen.dart'; // Import DiaryListScreen
 import 'services/objectbox_service.dart'; // Import ObjectBoxService
 
@@ -7,6 +8,7 @@ late ObjectBoxService objectbox; // Changed from ObjectBox to ObjectBoxService
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await dotenv.load(fileName: ".env");
   objectbox = await ObjectBoxService.create(); // Changed from ObjectBox to ObjectBoxService
   runApp(const MyApp());
 }

@@ -1,18 +1,25 @@
 import 'package:google_generative_ai/google_generative_ai.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import '../models/diary_entry.dart';
 import '../main.dart'; // Import to access the global objectbox instance
 
 class GeminiService {
-  // WARNING: API keys should not be hardcoded in production apps.
-  // Consider using environment variables or a secure key management solution.
-  static const String _apiKey = 'YOUR_GEMINI_API_KEY'; // Replace with your actual API key
-
   final GenerativeModel _model;
   final GenerativeModel _embeddingModel;
 
   GeminiService() :
-    _model = GenerativeModel(model: 'gemini-pro', apiKey: _apiKey),
-    _embeddingModel = GenerativeModel(model: 'embedding-001', apiKey: _apiKey);
+    _model = GenerativeModel(
+      model: 'gemini-pro', 
+      apiKey: dotenv.env['GEMINI_API_KEY'] ?? ''
+    ),
+    _embeddingModel = GenerativeModel(
+      model: 'embedding-001', 
+      apiKey: dotenv.env['GEMINI_API_KEY'] ?? ''
+    ) {
+    if (dotenv.env['GEMINI_API_KEY'] == null || dotenv.env['GEMINI_API_KEY']!.isEmpty) {
+      throw Exception('GEMINI_API_KEY not found in environment variables');
+    }
+  }
 
   Future<String> generateContent(String prompt) async {
     try {
